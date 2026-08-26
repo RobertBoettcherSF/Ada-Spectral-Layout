@@ -29,8 +29,8 @@ package body Spectral_Layout is
    -- Helper: Jacobi Eigenvalue Algorithm for symmetric matrices
    -- Finds eigenvalues (Vals) and eigenvectors (Vecs) without external dependencies
    procedure Jacobi_Eigen (A : in Matrix; Vals : out Vector; Vecs : out Matrix) is
-      N        : constant Positive := A'Length (1);
-      Cur_A    : Matrix (1 .. N, 1 .. N) := A;
+      N        : constant Natural := A'Length (1);
+      Cur_A    : Matrix (1 .. N, 1 .. N);
       Max_Iter : constant := 2000;
       Eps      : constant Float := 1.0e-7;
       Max_Val  : Float;
@@ -38,6 +38,12 @@ package body Spectral_Layout is
       Angle, S, C : Float;
       Temp_A, Temp_V : Float;
    begin
+      if N = 0 then
+         return;
+      end if;
+      
+      Cur_A := A;
+      
       -- Initialize Eigenvectors to Identity matrix
       for I in 1 .. N loop
          for J in 1 .. N loop
@@ -48,6 +54,12 @@ package body Spectral_Layout is
             end if;
          end loop;
       end loop;
+
+      -- Handle 1-node graphs safely
+      if N = 1 then
+         Vals (1) := Cur_A (1, 1);
+         return;
+      end if;
 
       -- Iterate to eliminate off-diagonal elements
       for Iter in 1 .. Max_Iter loop
@@ -105,11 +117,15 @@ package body Spectral_Layout is
 
    -- Helper: Sort eigenvalues and their corresponding eigenvectors
    procedure Sort_Eigen (Vals : in out Vector; Vecs : in out Matrix; Dir : Sort_Direction) is
-      N : constant Positive := Vals'Length;
+      N : constant Natural := Vals'Length;
       Temp_Val : Float;
       Temp_Vec : Float;
       Swap_Needed : Boolean;
    begin
+      if N < 2 then
+         return;
+      end if;
+
       for I in 1 .. N - 1 loop
          for J in I + 1 .. N loop
             Swap_Needed := False;
@@ -141,7 +157,7 @@ package body Spectral_Layout is
       Graph  : in  Adjacency_Matrix;
       Layout : out Layout_Array
    ) is
-      N : constant Positive := Graph'Length (1);
+      N : constant Natural := Graph'Length (1);
       L : Matrix (1 .. N, 1 .. N) := (others => (others => 0.0));
       Vals : Vector (1 .. N);
       Vecs : Matrix (1 .. N, 1 .. N);
@@ -183,7 +199,7 @@ package body Spectral_Layout is
       Graph  : in  Adjacency_Matrix;
       Layout : out Layout_Array
    ) is
-      N : constant Positive := Graph'Length (1);
+      N : constant Natural := Graph'Length (1);
       L_Norm : Matrix (1 .. N, 1 .. N) := (others => (others => 0.0));
       Vals : Vector (1 .. N);
       Vecs : Matrix (1 .. N, 1 .. N);
@@ -231,7 +247,7 @@ package body Spectral_Layout is
       Graph  : in  Adjacency_Matrix;
       Layout : out Layout_Array
    ) is
-      N : constant Positive := Graph'Length (1);
+      N : constant Natural := Graph'Length (1);
       A : Matrix (1 .. N, 1 .. N);
       Vals : Vector (1 .. N);
       Vecs : Matrix (1 .. N, 1 .. N);
