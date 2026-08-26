@@ -1,5 +1,3 @@
-with Ada.Exceptions;
-
 package Spectral_Layout is
 
    -- Strong typing for algorithm-specific data
