@@ -3,7 +3,7 @@
 GNAT = gnatmake
 
 all:
-	$(GNAT) -P spectral.gpr
+	$(GNAT) -P spectral.gpr -p
 
 test: all
 	@echo "Running tests..."
