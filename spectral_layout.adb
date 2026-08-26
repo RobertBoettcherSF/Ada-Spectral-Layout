@@ -161,18 +161,19 @@ package body Spectral_Layout is
       L : Matrix (1 .. N, 1 .. N) := (others => (others => 0.0));
       Vals : Vector (1 .. N);
       Vecs : Matrix (1 .. N, 1 .. N);
-      G_Idx : Node_Id;
+      G_Idx, G_Jdx : Node_Id;
    begin
       Validate_Square (Graph);
       if N = 0 then return; end if;
 
       -- Build Unnormalized Laplacian Matrix
       for I in 1 .. N loop
-         G_Idx := Graph'First (1) + Node_Id (I - 1);
+         G_Idx := Node_Id (Integer (Graph'First (1)) + I - 1);
          L (I, I) := Node_Degree (Graph, G_Idx);
          for J in 1 .. N loop
             if I /= J then
-               L (I, J) := -Graph (G_Idx, Graph'First (2) + Node_Id (J - 1));
+               G_Jdx := Node_Id (Integer (Graph'First (2)) + J - 1);
+               L (I, J) := -Graph (G_Idx, G_Jdx);
             end if;
          end loop;
       end loop;
@@ -182,7 +183,7 @@ package body Spectral_Layout is
 
       -- Extract Coordinates
       for I in 1 .. N loop
-         G_Idx := Layout'First + Node_Id (I - 1);
+         G_Idx := Node_Id (Integer (Layout'First) + I - 1);
          if N = 1 then
             Layout (G_Idx) := (0.0, 0.0);
          elsif N = 2 then
@@ -211,10 +212,10 @@ package body Spectral_Layout is
 
       -- Build Normalized Laplacian Matrix
       for I in 1 .. N loop
-         G_I := Graph'First (1) + Node_Id (I - 1);
+         G_I := Node_Id (Integer (Graph'First (1)) + I - 1);
          Deg_I := Node_Degree (Graph, G_I);
          for J in 1 .. N loop
-            G_J := Graph'First (2) + Node_Id (J - 1);
+            G_J := Node_Id (Integer (Graph'First (2)) + J - 1);
             Deg_J := Node_Degree (Graph, G_J);
             
             if I = J and then Deg_I > 0.0 then
@@ -230,7 +231,7 @@ package body Spectral_Layout is
 
       -- Extract Coordinates
       for I in 1 .. N loop
-         G_I := Layout'First + Node_Id (I - 1);
+         G_I := Node_Id (Integer (Layout'First) + I - 1);
          if N = 1 then
             Layout (G_I) := (0.0, 0.0);
          elsif N = 2 then
@@ -257,9 +258,9 @@ package body Spectral_Layout is
       if N = 0 then return; end if;
 
       for I in 1 .. N loop
-         G_I := Graph'First (1) + Node_Id (I - 1);
+         G_I := Node_Id (Integer (Graph'First (1)) + I - 1);
          for J in 1 .. N loop
-            G_J := Graph'First (2) + Node_Id (J - 1);
+            G_J := Node_Id (Integer (Graph'First (2)) + J - 1);
             A (I, J) := Graph (G_I, G_J);
          end loop;
       end loop;
@@ -268,7 +269,7 @@ package body Spectral_Layout is
       Sort_Eigen (Vals, Vecs, Descending); -- Descending for Adjacency
 
       for I in 1 .. N loop
-         G_I := Layout'First + Node_Id (I - 1);
+         G_I := Node_Id (Integer (Layout'First) + I - 1);
          if N = 1 then
             Layout (G_I) := (0.0, 0.0);
          else
