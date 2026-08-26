@@ -110,7 +110,7 @@ begin
    Put_Line ("TEST 10 - Adjacency Array Start Mismatches");
    Put_Line ("  Assumption: Hardcoded 1-based indices cause errors with arbitrary ranges.");
    declare
-      G_Off : Adjacency_Matrix (5 .. 6, 5 .. 6) := (others => (others => 1.0));
+      G_Off : constant Adjacency_Matrix (5 .. 6, 5 .. 6) := (others => (others => 1.0));
       L_Off : Layout_Array (100 .. 101);
    begin
       Layout_Adjacency (G_Off, L_Off);
@@ -134,7 +134,7 @@ begin
    Put_Line ("TEST 12 - Two Node Projection Check");
    Put_Line ("  Assumption: N=2 coordinates incorrectly populate Y axis (3rd eigen).");
    declare
-      G_2 : Adjacency_Matrix (1 .. 2, 1 .. 2) := ((0.0, 1.0), (1.0, 0.0));
+      G_2 : constant Adjacency_Matrix (1 .. 2, 1 .. 2) := ((0.0, 1.0), (1.0, 0.0));
       L_2 : Layout_Array (1 .. 2);
    begin
       Layout_Unnormalized_Laplacian (G_2, L_2);
