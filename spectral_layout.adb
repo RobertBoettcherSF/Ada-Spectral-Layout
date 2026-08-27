@@ -79,8 +79,8 @@ package body Spectral_Layout is
 
          exit when Max_Val < Eps; -- Converged
 
-         -- Calculate rotation angle
-         Angle := 0.5 * Arctan (2.0 * Cur_A (P, Q), Cur_A (P, P) - Cur_A (Q, Q));
+         -- Calculate rotation angle (Fixed denominator mapping A_qq - A_pp)
+         Angle := 0.5 * Arctan (2.0 * Cur_A (P, Q), Cur_A (Q, Q) - Cur_A (P, P));
          S := Sin (Angle);
          C := Cos (Angle);
 
